@@ -353,8 +353,14 @@ class MiniMindBlock(nn.Module):
             self.input_layernorm(hidden_states), position_embeddings,
             past_key_value, use_cache, attention_mask
         )
-        hidden_states += residual
-        hidden_states = hidden_states + self.mlp(self.post_attention_layernorm(hidden_states))
+        # hidden_states += residual
+        # change:
+        epsilon1 = 0.1
+        hidden_states = residual + hidden_states * epsilon1
+        # hidden_states = hidden_states + self.mlp(self.post_attention_layernorm(hidden_states))
+        # change:
+        epsilon2 = 0.1
+        hidden_states = hidden_states + self.mlp(self.post_attention_layernorm(hidden_states)) * epsilon2
         return hidden_states, present_key_value
 
 
